@@ -1,0 +1,96 @@
+//This one's pretty fun and different. We need to give the player 10 randomly selected levels from the pool and obscure what the level is.
+class Yoshi_LevelCompilation_RandomizerMega extends Yoshi_RandomizerLevelCompilation;
+
+defaultproperties
+{
+    CompilationID=23
+    Icon=Texture2D'Yoshi_LevelComp_Content2.Textures.RandomizedComp';
+    CompName="Mega Randomizer"
+    RandomizerLevelCount=20
+}
+
+function PossibleLevelsList() {
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Lab());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Gallery());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Tour());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.WTMT());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.BB());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.SCFOS());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.DWTM());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.GV());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.HUMT());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.CTR());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Sewers());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Bazaar());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.MafiaOfCooks());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.DBS());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.MOTOE());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.PP());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.TR());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Parade());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.FakeAwardCeremony());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.AwardCeremony());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.OwlExpress());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Moon());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.DBSRift());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.CO());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.SW());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.TOD());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Manor());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.MDS());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.YCHE());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Pipe());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Village());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.SleepySubcon());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.LavaCake());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Birdhouse());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Windmill());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.TwilightBell());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Illness());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.CurlyTailTrail());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.TwilightBellRift());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.AlpineSkylineRift());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Finale());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.BonVoyage());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.ShipShape());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.RocktheBoat());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Balcony());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.DeepSea());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.MainStation());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.YellowOverpass());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.GreenClean());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.BluefinTunnels());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.PinkPaw());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.YellowOverpassManhole());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.GreenCleanManhole());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.PinkPawManhole());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.RushHour());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.RumbiFactory());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.BeatTheHeat());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.SYBFOS());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Collectathon());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.VaultCodesInTheWind());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.SSFOS());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.MafiasJumps());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.EncoreEncore());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.MafiaOfCooksRC());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.SecurityBreach());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Hootenanny());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.TenSeconds());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.KillingTwoBirds());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.DeadBirdStudioRC());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.RhythmJumpStudio());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.Impossible());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.BreachingTheContract());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.SleepySubconRC());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.TwilightTravels());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.BirdSanctuary());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.WoundUpWindmill());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.TheIllnessHasSpeedrun());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.AlpineSkylineRC());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.TheMountainRift());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.MustacheGauntlet());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.NoMoreBadGuys());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.CruisinForABruisin());
+    PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.DeepSeaRC());
+}
