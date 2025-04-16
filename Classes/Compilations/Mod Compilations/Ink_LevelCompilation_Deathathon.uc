@@ -5,27 +5,16 @@
 */
 class Ink_LevelCompilation_Deathathon extends Yoshi_RandomizerLevelCompilation;
 
-const OldDeathathonLevelCount = 115;
-
-var const string OldDeathathonURL;
+const OldDeathathonLevelCount = 111;
 
 defaultproperties
 {
     CompilationID=99998 //Wow what an ID, this one needs to always be last.
     Icon=Texture2D'Yoshi_LevelComp_Content2.Textures.Deathathon';
     CompName="Deathathon"
-    RandomizerLevelCount=201
+    RandomizerLevelCount=381
     RandomizerTitlecard=Texture2D'Yoshi_LevelComp_Content2.Textures.Deathathon_Titlecard_Final'
     CompilationURL="https://steamcommunity.com/sharedfiles/filedetails/?id=2120872753";
-    OldDeathathonURL="https://steamcommunity.com/workshop/filedetails/?id=2446324265";
-}
-
-function int GetLevelsCount() {
-    if(IsOnNewLevelCompsVersion()){
-        return RandomizerLevelCount;
-    }
-
-    return OldDeathathonLevelCount;
 }
 
 function Initialize() {
@@ -37,7 +26,7 @@ function Initialize() {
         Levels[i].Titlecard = RandomizerTitlecard;
     }
 
-    Super(Yoshi_ModLevelCompilation).Initialize(); //The parent class will get the level set again, we don't want that
+    Super(Yoshi_LevelCompilation).Initialize(); //The parent class will get the level set again, we don't want that
 }
 
 function LevelsList() {
@@ -52,20 +41,11 @@ function LevelsList() {
     }
 }
 
-static function OpenCollection()
-{
-	local string WorkshopURL;
-
-    if(IsOnNewLevelCompsVersion()) {
-        WorkshopURL = default.CompilationURL;
-    }
-    else {
-        WorkshopURL = default.OldDeathathonURL;
-    }
-
-	class'Hat_GameManager_Base'.static.OpenBrowserURL(WorkshopURL);
-}
-
+//Oh
+//Sweet
+//Jesus
+//Pecking
+//Christ
 function PossibleLevelsList() {
     PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.BeatTheHeat());
     PossibleLevels.AddItem(class'Yoshi_LevelsSheet'.static.SYBFOS());
@@ -156,12 +136,8 @@ function PossibleLevelsList() {
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CafeEleganzeCollapse());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.FrappeSpeedrun());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.HyperMafiaBoss());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.killingtwoobirds());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.JumplessWindmill());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.KillingFourBirds());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.UnpeacefulRoad());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BlueBonanzaCollapse());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.mafiaboss());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.InCloseQuarters());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.StressBoogaloo());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.StressEndless());
@@ -188,6 +164,12 @@ function PossibleLevelsList() {
     //
 
     if(!IsOnNewLevelCompsVersion()) return; //We don't want them getting these levels, they won't function properly with the old ID system
+    
+    //Moved down to here since the reupload was past the great blockade.
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.killingtwoobirds());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.KillingFourBirds());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.UnpeacefulRoad());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.mafiaboss());
 
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.DwellerSpeenTower());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.TrainBrainWreck());
@@ -241,14 +223,12 @@ function PossibleLevelsList() {
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MetroCollectathon());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpeedrunAwardCeremony());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.VanessaSpeedrun());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.OhHelloMafiaRiftOfModderAlabra());
 
     //JESUS PECK THAT'S A LOT OF NEW LEVELS
     
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ReachingOverclock());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.RhythmCollapseStudio());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.DanceRealmDisco());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.TragedyOfSmolChild());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BIGBIGRUMBUS());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BurntWallet());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.FireHazard());
@@ -263,11 +243,6 @@ function PossibleLevelsList() {
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.RecyclingDay());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ProperFilming());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.RoadToTimeTrial());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.UnstableBirdhouse());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ExplosiveObligations());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.NitroFueled());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.NitroBirdStudios());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MoonCrater());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.WinnerWinnerDirectorDinner());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.OuterwallScale());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.PerfectRun());
@@ -279,6 +254,196 @@ function PossibleLevelsList() {
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ColdHearted());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.KickStart());
     PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.GreyRiftSpeedrun());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MovementSpeedrun());
-    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MafiaPurgatory());
+
+    //DEATHATHON'S ALMIGHTY RETURN, TREMBLE ALL WHO KNEEL BEFORE IT.
+
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SnootchQTEX());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MafiaBossQT());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MafiaBossQTEX());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.OneMinuteShipping());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.LousyCashGrab());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MiseryMarch());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.OccurrenceRiftCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SeaOfMemoriesCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CruisinConfusion());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.EndOfTimeCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SeeingStars());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpaceVoidSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SunkenWell());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ExpressDelivery());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.PlayingWithFire());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ActualToiletOfDoomEX());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.WindBlowRidge());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CrustaceanCaper());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BouncedFromOuterSpace());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BeachBallFinale());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ToyboxCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.LandmineEconomy());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.GlassCannonFodder());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.PedalToTheMetal());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ShockingPowerSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MechanicalSandsCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.LightningStrikesBack());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.DesertRings());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.TemplateRiftCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.WhenPushComesToShove());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ParadeJumps());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.NokiBayCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CoreCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CosmicCookieChase());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.TheOriginalDeathwish());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.DeepFriedDelivery());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.QueensNightmareCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CelestialEclipse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MiningAway());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.OneWingedAngel());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.OHGODOHPECKTWO());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.DoubleTimeBeatBlocks());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpeedrunHour());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.NoFloorBossWoah());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.TowersJumpsssssssssssssssssssss());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.NOOOOOOO());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.WeegeeNightmare());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.FlawlessFireFury());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.HundredDegreesHotter());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.HyperMu());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.NoBombs());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.gnipmuJeroMoN());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MuBallPurgatory());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.DangerZone());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.QualityTriathalon());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BadMoonie());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpeedySpikeWorld());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ElecrowProtection());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MaintenancePipeDream());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.RemixRush());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.EndlessEndeavor());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BoilerJumps());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.HoldingCell());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MontyQualityTime());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MontyEX());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.HerSpaceshipCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MisplacedTimelineCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SuperCompletelyOrdinaryShipShape());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BirdiusTwo());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.FishHotelCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.softbomb());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.EverlastingRetribution());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.RocketJumpCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.WantedInMomentro());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CursedPurplePons());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ShroomAndDoom());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.VanessaCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.QuickBout());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SecurityMeltdown());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SnatcherSamples());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.LegendarySandHero());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpiderEX());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.PlumbersNightmare());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.WertiJumpscare());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.StudJumps());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.LonelyLightGreenLight());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.LavaJumps());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ScreamFortressTwo());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MoonsCurse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.HeatingUpJumps());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BABIES());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.GraveyardCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CountingDown());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SecurityBreachJumps());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BarrelBattleEX());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MoonieTheFourth());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MafiaBossNeo());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BirdsNeo());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ToiletNeoClassic());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ToiletNeoNew());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SnatcherNeo());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CorruptionNeo());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MustacheNeo());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.TrueSnatcherNeo());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.UrchinSea());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.PurplePonPlunge());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpeedrunOfTheGods());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpeedTrial());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MurdersJumps());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SoYoureBackJumps());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.WowzaJumps());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CruisinDeluxe());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CruisinAndTaskin());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.TheBackrooms());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.GraveyardShift());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MojerWellEscape());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ShockzoEX());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SnatcherMixUp());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CreatorDLCSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.DefectiveChannel());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.EndlessParty());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.PacKidEX());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpeedrunMafiaBoss());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpeedrunDirectors());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpeedrunToilet());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpeedrunSnatcher());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpeedrunStache());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ModILSpeedrun_WeekOne());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ModILSpeedrun_WeekThree());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ModILSpeedrun_WeekFour());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ModILSpeedrun_WeekFive());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ModILSpeedrun_WeekSix());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ModILSpeedrun_WeekSeven());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ModILSpeedrun_WeekEight());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ModILSpeedrun_WeekNine());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ModILSpeedrun_WeekTwelve());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.DeepSeaTHREECollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.FarewellSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.QualityTimTime());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.DeathToll());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.LavaLandsCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.NegativePurpleCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.VaporwaveSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.HellMoonie());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.NoHatsOnlyMustaches());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.FactoryMalfunction());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ClosingHours());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.StaffOnly());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.AftermathSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SnowySlopeSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.JinglePonsCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.WaveDashing());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.NewEdenPurplePons());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.LootPool());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BurntJumpsChillDashes());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CrystalLakeParkRanger());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SpeedrunToTheGods());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ReverseTowersJumps());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.JimsStoryCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.TowersDaredevilRun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.KillBoxes());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SariaRiftCollapse());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.OwlPowerStation());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BacktrackTheManhole());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ThirdFloorSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.TranscendingToBlending());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.HauntedCastleSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.JustLikeClockworkSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.BotanicalBypassSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.StarlightHeightsSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CoolIceSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.ParkTimeTravelSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.JunkyardSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.NightOfWondersSpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.FebruaryTwelfth());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.GravityInsanitySpeedrun());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.PurplePonPlanet());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.GODSPEED());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SandAndSlaughter());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.PizzaTower());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.SandIsLava());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.MinecartGO());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.CommunityRiftRumbi());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.RiftCollapseMetro());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.AfterStoryAct1());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.AfterStoryAct2());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.AfterStoryAct3());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.AfterStoryAct4());
+    PossibleLevels.AddItem(class'ALLDEATHWISHESAAA'.static.AfterStoryAct5());
 }

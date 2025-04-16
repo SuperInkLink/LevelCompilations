@@ -70,7 +70,7 @@ function bool StartCompLevel(CompilationLevel CL) {
     //This is now a Non-DW Mod Level
     LevelCompilationsVersionCheck = IsOnNewLevelCompsVersion();
 
-    if(LevelCompilationsVersionCheck ? !IsModReady(CL) : !IsModReadyOlderVersion(CL)) {
+    if(LevelCompilationsVersionCheck ? !IsModReady(CL.WorkshopID) : !IsModReadyOlderVersion(CL.WorkshopID)) {
         Print("Mod not found! Version Check: " $ LevelCompilationsVersionCheck);
         return false;
     }
@@ -147,29 +147,61 @@ function StartDeathWishCompLevel(CompilationLevel CL) {
     Print("Failed to find Mod Death Wish " $ CL.ModDeathWish $ " with Act Name " $ CL.ActName);
 }
 
-function bool CheckForMissingMods() {
-    local bool IsMissingMods;
-    local int i;
+function bool CheckForMissingMods() 
+{
+    local Array<string> IDsToDownload, ObjectiveWorkshopIDs;
+    local class<Hat_SnatcherContract_DeathWish> DeathWishClass;
+    local int i, NumIdx, MissingModCount;
     local bool LevelCompsVersionCheck;
 
     LevelCompsVersionCheck = IsOnNewLevelCompsVersion();
     
-    if(Levels.Length == 0) {
+    if (Levels.Length == 0)
         LevelsList();
-    }
 
-    IsMissingMods = false;
-    for(i = 0; i < Levels.Length; i++) {
-        if(Levels[i].isMod && LevelCompsVersionCheck ? !IsModReady(Levels[i]) : !IsModReadyOlderVersion(Levels[i])) {
-            IsMissingMods = true;
+    MissingModCount = 0;
+    for (i = 0; i < Levels.Length; i++) 
+    {
+        if (Levels[i].isMod && IDsToDownload.Find(Levels[i].WorkshopID) == INDEX_NONE)
+            IDsToDownload.AddItem(Levels[i].WorkshopID);
+        if (Levels[i].isDeathWish || Levels[i].isModDeathWish)
+        {
+            if (Levels[i].DeathWish != None)
+                DeathWishClass = Levels[i].DeathWish;
+            else if (Levels[i].isModDeathWish && Levels[i].ModDeathWish != "")
+                DeathWishClass = GetModDeathWish(Levels[i]);
+            
+            if (DeathWishClass != None)
+            {
+                ObjectiveWorkshopIDs = DeathWishClass.static.GetObjectiveWorkshopRemoteIDs();
+                if (ObjectiveWorkshopIDs.Length > 0)
+                {
+                    for (NumIdx = 0; NumIdx < ObjectiveWorkshopIDs.Length; NumIdx++)
+                    {
+                        if (ObjectiveWorkshopIDs[NumIdx] != "" && IDsToDownload.Find(ObjectiveWorkshopIDs[NumIdx]) == INDEX_NONE)
+                            IDsToDownload.AddItem(ObjectiveWorkshopIDs[NumIdx]);
+                    }
+                }
+            }
         }
     }
-    return IsMissingMods;    
+
+    for (i = 0; i < IDsToDownload.Length; i++)
+    {
+        if (LevelCompsVersionCheck ? !IsModReady(IDsToDownload[i]) : !IsModReadyOlderVersion(IDsToDownload[i]))
+        {
+            MissingModCount++;
+            //print("MISSING" @ MissingModCount @ "MOD(s) OF ID:" @ IDsToDownload[i]);
+            //class'GameMod'.static.LogMod("MISSING" @ MissingModCount @ "MOD(s) OF ID:" @ IDsToDownload[i]);
+        }
+    }
+
+    return MissingModCount > 0;    
 }
 
-static function bool IsModReady(CompilationLevel CL) {
+static function bool IsModReady(String WorkshopID) {
     local int WorkshopIndex;
-    WorkshopIndex = FindGameModID(CL.WorkshopID);
+    WorkshopIndex = FindGameModID(WorkshopID);
 
     if(WorkshopIndex != INDEX_NONE) {
         if(class'GameMod'.static.IsModInstalled(WorkshopIndex) && class'GameMod'.static.GetModDownloadPercent(WorkshopIndex) == INDEX_NONE) {
@@ -180,11 +212,29 @@ static function bool IsModReady(CompilationLevel CL) {
 }
 
 //This function IN THEORY should allow older DLC 2 versions to still play Level Comps, albeit without the post-crisis mods
-static function bool IsModReadyOlderVersion(CompilationLevel CL) {
-    if(class'GameMod'.static.IsModInstalled(int(CL.WorkshopID)) && class'GameMod'.static.GetModDownloadPercent(int(CL.WorkshopID)) == INDEX_NONE) {
+static function bool IsModReadyOlderVersion(String WorkshopID) {
+    if(class'GameMod'.static.IsModInstalled(int(WorkshopID)) && class'GameMod'.static.GetModDownloadPercent(int(WorkshopID)) == INDEX_NONE) {
         return true;
     }
     return false;
+}
+
+//REALLY should've foolproofed by setting up the mod DWs as PackageName.DeathWishClass all those years ago, but I guess we doin this now!
+static function class<Hat_SnatcherContract_DeathWish> GetModDeathWish(CompilationLevel CL)
+{
+    local Array< Class<Object> > ModDeathWishes;
+	local int i;
+	
+    //We can't use the actual class so we need to find it via string, this array should be exclusively the right class
+	ModDeathWishes = class'Hat_ClassHelper'.static.GetAllScriptClasses(CL.ModDeathWish);
+
+	for (i = 0; i < ModDeathWishes.Length; i++)
+	{
+        if (string(class<Hat_SnatcherContract_DeathWish>(ModDeathWishes[i]).default.Class) ~= CL.ModDeathWish)
+            return class<Hat_SnatcherContract_DeathWish>(ModDeathWishes[i].default.Class);
+    }
+
+    return None;
 }
 
 //Thanks to Meku for this one, utilized with the new workshop ID system

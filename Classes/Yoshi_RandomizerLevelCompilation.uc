@@ -98,24 +98,56 @@ function array<CompilationLevel> GetARandomSetOfLevels(int NumberOfLevels) {
     return SelectedLevels;
 }
 
-function bool CheckForMissingMods() {
-    local bool IsMissingMods;
-    local int i;
+function bool CheckForMissingMods() 
+{
+    local Array<string> IDsToDownload, ObjectiveWorkshopIDs;
+    local class<Hat_SnatcherContract_DeathWish> DeathWishClass;
+    local int i, NumIdx, MissingModCount;
     local bool LevelCompsVersionCheck;
 
     LevelCompsVersionCheck = IsOnNewLevelCompsVersion();
-
-    if(PossibleLevels.Length == 0) {
+    
+    if (PossibleLevels.Length == 0)
         PossibleLevelsList();
-    }
 
-    IsMissingMods = false;
-    for(i = 0; i < PossibleLevels.Length; i++) {
-        if(PossibleLevels[i].isMod && LevelCompsVersionCheck ? !IsModReady(PossibleLevels[i]) : !IsModReadyOlderVersion(PossibleLevels[i])) {
-            IsMissingMods = true;
+    MissingModCount = 0;
+    for (i = 0; i < PossibleLevels.Length; i++) 
+    {
+        if (PossibleLevels[i].isMod && IDsToDownload.Find(PossibleLevels[i].WorkshopID) == INDEX_NONE)
+            IDsToDownload.AddItem(PossibleLevels[i].WorkshopID);
+        if (PossibleLevels[i].isDeathWish || PossibleLevels[i].isModDeathWish)
+        {
+            if (PossibleLevels[i].DeathWish != None)
+                DeathWishClass = PossibleLevels[i].DeathWish;
+            else if (PossibleLevels[i].isModDeathWish && PossibleLevels[i].ModDeathWish != "")
+                DeathWishClass = GetModDeathWish(PossibleLevels[i]);
+            
+            if (DeathWishClass != None)
+            {
+                ObjectiveWorkshopIDs = DeathWishClass.static.GetObjectiveWorkshopRemoteIDs();
+                if (ObjectiveWorkshopIDs.Length > 0)
+                {
+                    for (NumIdx = 0; NumIdx < ObjectiveWorkshopIDs.Length; NumIdx++)
+                    {
+                        if (ObjectiveWorkshopIDs[NumIdx] != "" && IDsToDownload.Find(ObjectiveWorkshopIDs[NumIdx]) == INDEX_NONE)
+                            IDsToDownload.AddItem(ObjectiveWorkshopIDs[NumIdx]);
+                    }
+                }
+            }
         }
     }
-    return IsMissingMods;    
+
+    for (i = 0; i < IDsToDownload.Length; i++)
+    {
+        if (LevelCompsVersionCheck ? !IsModReady(IDsToDownload[i]) : !IsModReadyOlderVersion(IDsToDownload[i]))
+        {
+            MissingModCount++;
+            //print("MISSING" @ MissingModCount @ "MOD(s) OF ID:" @ IDsToDownload[i]);
+            class'GameMod'.static.LogMod("MISSING" @ MissingModCount @ "MOD(s) OF ID:" @ IDsToDownload[i]);
+        }
+    }
+
+    return MissingModCount > 0;    
 }
 
 //Thanks Starblaster

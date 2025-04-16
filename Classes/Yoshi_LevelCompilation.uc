@@ -357,12 +357,24 @@ function CustomPlayDeathWish(class<Hat_SnatcherContract_DeathWish> DeathWish, Co
 	local MaterialInstanceConstant TitleCaMaterialInstance;
 	local string ChapterName, ActName, MapName;
 	local Texture2D TitlecardBackground, CoopIcon;
+	local Array<GameModInfo> ModList;
+	local int ModIndex;
+	local bool bHasSetActiveLevelMod;
+	local Array<string> ObjectiveWorkshopRemoteIDs;
 	
 	ActInfo = DeathWish.default.ActInfo;
 	ChapterInfo = ActInfo != None ? ActInfo.ChapterInfo : None;
 	MapName = ActInfo != None ? ActInfo.MapName : "";
+	bHasSetActiveLevelMod = false;
 
-	`GameManager.LoadNewAct(ChapterInfo.ChapterID, ActInfo.ActID);
+	if (ChapterInfo != None)
+	{
+		`GameManager.LoadNewAct(ChapterInfo.ChapterID, ActInfo != None ? ActInfo.ActID : 1);
+	}
+	else
+	{
+		`GameManager.LoadNewAct(99, 1);
+	}
 	
 	`if(`isdefined(WITH_DLC2))
 	if (class'Hat_GameManager'.default.AssistMode && DeathWish.default.HasEasyMode)
@@ -383,6 +395,24 @@ function CustomPlayDeathWish(class<Hat_SnatcherContract_DeathWish> DeathWish, Co
 	
 	if (DeathWish.default.AllowedMaps.length > 0 && DeathWish.default.AllowedMaps.Find(MapName) == INDEX_NONE)
 		MapName = DeathWish.default.AllowedMaps[0];
+	
+	ObjectiveWorkshopRemoteIDs = DeathWish.static.GetObjectiveWorkshopRemoteIDs();
+	if (ObjectiveWorkshopRemoteIDs.length > 0 && MapName == "")
+	{
+		ModList = class'GameMod'.static.GetModList();
+		for (ModIndex = 0; ModIndex < ModList.Length; ModIndex++)
+		{
+			if (ModList[ModIndex].WorkshopID == INDEX_NONE) continue;
+			if (!ModList[ModIndex].IsInstalled) continue;
+			if (ModList[ModIndex].FirstMap == "") continue;
+			if (ObjectiveWorkshopRemoteIDs.Find(class'GameMod'.static.GetModIDString(ModList[ModIndex].WorkshopID)) == INDEX_NONE) continue;
+			
+			MapName = ModList[ModIndex].FirstMap;
+			class'GameMod'.static.SetActiveLevelMod(ModList[ModIndex].PackageName);
+			bHasSetActiveLevelMod = true;
+			break;
+		}
+	}
 
 	if (DeathWish.default.StartCheckpoint > 0)
 		`GameManager.SetCurrentCheckpoint(DeathWish.default.StartCheckpoint, false, false);
@@ -396,71 +426,87 @@ function CustomPlayDeathWish(class<Hat_SnatcherContract_DeathWish> DeathWish, Co
     if(CL.Map != "") MapName = CL.Map;
     if(CL.Checkpoint > 0) `GameManager.SetCurrentCheckpoint(CL.Checkpoint, false, false);  
     if(CL.Act > 0) `GameManager.SetCurrentAct(CL.Act);
-
-	// Open title card
-	PlayerController = `GameManager.GetALocalPlayerController();
-	if (PlayerController != None && PlayerController.myHUD != None)
+    
+	if (MapName != "" && !class'Hat_ClassHelper'.static.PackageExists(MapName))
 	{
-		MyHUD = Hat_HUD(PlayerController.myHUD);
-		if (MyHUD != None)
-		{
-			ChapterName = "";
-			if (DeathWish.static.ConsiderForDeathWishTotal())
-			{
-				if (DeathWish.default.IsCommunity)
-					ChapterName = Caps(class'Hat_Localizer'.static.GetGame("levels", "Community"));
-				else
-					ChapterName = Caps(class'Hat_Localizer'.static.GetGame("levels", "DeathWish"));
-
-			}
-
-			if (DeathWish.default.IsCommunity)
-				ActName = Caps(DeathWish.static.GetShortLocalizedTitle());
-			else
-				ActName = Caps(DeathWish.static.GetLocalizedTitle());
-
-			
-			TitlecardBackground = ActInfo != None ? ActInfo.GetTitleCardBackground() : None;
-			CoopIcon = class'Hat_HUDElementActTitleCard'.default.DefaultCoopIcon[Rand(class'Hat_HUDElementActTitleCard'.default.DefaultCoopIcon.Length)];
-			if (ActInfo != None && ActInfo.CoopIcon != None) CoopIcon = ActInfo.CoopIcon;
-			if (ActInfo != None && ActInfo.IsBonus && TitlecardBackground == None)
-			{
-				if (ActInfo.RequiredActID.Length > 0)
-				{
-					TitlecardBackground = class'Hat_HUDMenuActSelect'.default.TitleCard_TimeRiftWater;
-					CoopIcon = class'Hat_HUDElementActTitleCard'.default.TimeRift_Water_CoopIcon;
-				}
-				else
-					TitlecardBackground = class'Hat_HUDMenuActSelect'.default.TitleCard_TimeRiftCave;
-			}
-            //
-            // Titlecard fix
-            //
-			if (CL.Titlecard != None)
-				TitlecardBackground = CL.Titlecard;
-			
-			TitleCaMaterialInstance = new class'MaterialInstanceConstant';
-			TitleCaMaterialInstance.SetParent(class'Hat_HUDMenuDeathWish'.default.DeathWishTitleCardMaterial);
-			TitleCaMaterialInstance.SetTextureParameterValue('Texture', TitlecardBackground);
-			TitleCaMaterialInstance.SetTextureParameterValue('CoopIcon', CoopIcon);
-            if(CL.UseDWOverlay && !(Yoshi_RandomizerLevelCompilation(self) != None)) {
-                TitleCaMaterialInstance.SetScalarParameterValue('DeathWishOverlay', 1);
-            }
-            else {
-                TitleCaMaterialInstance.SetScalarParameterValue('DeathWishOverlay', 0);
-            }
-			TitleCard = Hat_HUDElementActTitleCard(MyHUD.OpenHUD(class'Hat_HUDElementActTitleCard', MapName));
-            //Randomized Comps should not display their Chapter/Act information
-            if(Yoshi_RandomizerLevelCompilation(self) != None) {
-                ChapterName = "Level " $ GetLevelNumber(GetCompilationID()) + 1;
-                ActName = "???";
-            }
-			TitleCard.SetTitleCardChapterActInfo(TitleCaMaterialInstance, ChapterName, ActName);
-			TitleCard.UseActSelectLoadingMusic = true;
-			TitleCard.IsDeathWish = true;
-		}
+		`broadcast("Unable to find map '" $ MapName $ "'");
+		MapName = "";
 	}
+	
+	if (!bHasSetActiveLevelMod)
+		class'GameMod'.static.ResetActiveLevelMod();
+
 	class'Hat_SaveBitHelper'.static.AddLevelBit("IsOnActiveDeathWish", 1, `GameManager.HubMapName);
+
+    if (MapName != "")
+    {
+        // Open title card
+        PlayerController = `GameManager.GetALocalPlayerController();
+        if (PlayerController != None && PlayerController.myHUD != None)
+        {
+            MyHUD = Hat_HUD(PlayerController.myHUD);
+            if (MyHUD != None)
+            {
+                ChapterName = "";
+                if (DeathWish.static.ConsiderForDeathWishTotal())
+                {
+                    if (DeathWish.default.IsCommunity)
+                        ChapterName = Caps(class'Hat_Localizer'.static.GetGame("levels", "Community"));
+                    else
+                        ChapterName = Caps(class'Hat_Localizer'.static.GetGame("levels", "DeathWish"));
+
+                }
+
+                if (DeathWish.default.IsCommunity)
+                    ActName = Caps(DeathWish.static.GetShortLocalizedTitle());
+                else
+                    ActName = Caps(DeathWish.static.GetLocalizedTitle());
+
+                
+                TitlecardBackground = ActInfo != None ? ActInfo.GetTitleCardBackground() : None;
+                CoopIcon = class'Hat_HUDElementActTitleCard'.default.DefaultCoopIcon[Rand(class'Hat_HUDElementActTitleCard'.default.DefaultCoopIcon.Length)];
+                if (ActInfo != None && ActInfo.CoopIcon != None) CoopIcon = ActInfo.CoopIcon;
+                if (ActInfo != None && ActInfo.IsBonus && TitlecardBackground == None)
+                {
+                    if (ActInfo.RequiredActID.Length > 0)
+                    {
+                        TitlecardBackground = class'Hat_HUDMenuActSelect'.default.TitleCard_TimeRiftWater;
+                        CoopIcon = class'Hat_HUDElementActTitleCard'.default.TimeRift_Water_CoopIcon;
+                    }
+                    else
+                        TitlecardBackground = class'Hat_HUDMenuActSelect'.default.TitleCard_TimeRiftCave;
+                }
+                //
+                // Titlecard fix
+                //
+                if (CL.Titlecard != None)
+                    TitlecardBackground = CL.Titlecard;
+				else if (DeathWish.static.GetTitleCard() != None)
+					TitlecardBackground = DeathWish.static.GetTitleCard();
+                
+                TitleCaMaterialInstance = new class'MaterialInstanceConstant';
+                TitleCaMaterialInstance.SetParent(class'Hat_HUDMenuDeathWish'.default.DeathWishTitleCardMaterial);
+                TitleCaMaterialInstance.SetTextureParameterValue('Texture', TitlecardBackground);
+                TitleCaMaterialInstance.SetTextureParameterValue('CoopIcon', CoopIcon);
+                if(CL.UseDWOverlay && !(Yoshi_RandomizerLevelCompilation(self) != None)) {
+                    TitleCaMaterialInstance.SetScalarParameterValue('DeathWishOverlay', 1);
+                }
+                else {
+                    TitleCaMaterialInstance.SetScalarParameterValue('DeathWishOverlay', 0);
+                }
+                TitleCard = Hat_HUDElementActTitleCard(MyHUD.OpenHUD(class'Hat_HUDElementActTitleCard', MapName));
+                //Randomized Comps should not display their Chapter/Act information
+                if(Yoshi_RandomizerLevelCompilation(self) != None) {
+                    ChapterName = "Level " $ GetLevelNumber(GetCompilationID()) + 1;
+                    ActName = "???";
+                }
+                TitleCard.SetTitleCardChapterActInfo(TitleCaMaterialInstance, ChapterName, ActName);
+                TitleCard.UseActSelectLoadingMusic = true;
+                TitleCard.IsDeathWish = true;
+            }
+        }
+    }
+
 	// fallback level transition if title card failed
 	if (TitleCard == None)
 	{
